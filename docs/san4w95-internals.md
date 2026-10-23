@@ -83,6 +83,7 @@ loaded before WinMain (the shim loads it in `DllMain`).
   가두기 - 다음 실행부터" (ID 0x7e5f) writes `devmode` in `[SAN4W95]`; it cannot act at once,
   because cnc-ddraw reads devmode only at load into an unexported global and its window
   procedure (in front of the shim's) drops mouse input while unlocked unless devmode is set.
+  The patch's `ddraw.ini` ships `devmode=true`, so the lock starts off.
 
 ## State flags dword 0x543e94
 

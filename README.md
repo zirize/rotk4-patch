@@ -59,6 +59,22 @@ cd /path/to/game             # 게임 폴더에서 실행해야 합니다
 WINEDLLOVERRIDES=ddraw=n,b LANG=ko_KR.UTF-8 wine SAN4W95.EXE
 ```
 
+### 화면 필터 바꾸기 (선택)
+
+기본 설정은 픽셀이 또렷한 nearest neighbor입니다. 창이 게임 화면의 정수배라서 픽셀이 고르게
+보입니다. 부드러운 화면이나 CRT·스캔라인 효과를 원하면 게임 폴더의 `cnc-ddraw config.exe`나
+`ddraw.ini`의 `[ddraw]` 부분에서 바꿉니다.
+
+- Windows는 보통 Direct3D 9로 그리고, 필터는 `d3d9_filter`입니다: `0` nearest neighbor(기본),
+  `1` bilinear. 이 게임은 256색이라 `2` bicubic과 `3` lanczos는 bilinear처럼 보입니다.
+- Wine은 보통 OpenGL로 그리고, 필터는 `shader`입니다: `Nearest neighbor`(기본), `Bilinear`,
+  `Bicubic`, `Lanczos`, `xBR-lv2` 중 하나, 또는 `.glsl` 셰이더 파일의 경로.
+- CRT, 스캔라인, xBR 같은 셰이더 파일은
+  [cnc-ddraw 릴리스](https://github.com/FunkyFr3sh/cnc-ddraw/releases/tag/v7.1.0.0)의
+  `cnc-ddraw.zip`에 든 `Shaders` 폴더에 있습니다. 그 폴더를 게임 폴더에 복사하고
+  `shader=Shaders\crt\crt-lottes-fast-no-warp-bilinear.glsl`처럼 지정합니다.
+  Windows에서 셰이더 파일을 쓰려면 `renderer=opengl`도 함께 바꿉니다.
+
 ### CD 음악을 MP3로 줄이기 (선택)
 
 `Audio.bin`은 약 480 MB입니다. `tools/cd2mp3.sh`(Linux, `lame` 필요)로 음악 트랙을 MP3로

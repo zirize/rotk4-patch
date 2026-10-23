@@ -34,16 +34,19 @@ cp "$repo/shim/minimp3/LICENSE" "$dst/licenses/minimp3.txt"
 # borderless fullscreen (exclusive fullscreen changes the monitor mode to the window size,
 # which some screens do not take). Window size and position stay at the defaults
 # (0, -32000); the shim picks a size on first start.
-# The window is an integer multiple of the game (shim "화면" menu), so the built-in nearest
-# neighbor filter keeps pixels sharp, and boxing keeps full screen at an integer multiple too;
-# both are built in, so Shaders/ is left out. Edited in [ddraw] only, where the config tool
-# writes, so the user can still change them there.
+# The window is an integer multiple of the game (shim "화면" menu), so nearest neighbor keeps
+# pixels sharp: `shader` for OpenGL (Wine picks it), `d3d9_filter` for Direct3D 9 (Windows
+# picks it; its default 2 looked blurred on Windows 11). boxing keeps full screen at an integer
+# multiple too. Both filters are built in, so Shaders/ is left out. Edited in [ddraw] only,
+# where the config tool writes, so the user can still change them there.
+# devmode=true in [SAN4W95]: the cursor lock starts off (the shim's "마우스 가두기" turns it on).
 sed -e '/^\[ddraw\]\r$/,/^\[/{' \
     -e 's/^windowed=false\r$/windowed=true\r/; s/^maintas=false\r$/maintas=true\r/' \
-    -e 's/^boxing=false\r$/boxing=true\r/; s/^shader=.*\r$/shader=Nearest neighbor\r/' -e '}' \
+    -e 's/^boxing=false\r$/boxing=true\r/; s/^shader=.*\r$/shader=Nearest neighbor\r/' \
+    -e 's/^d3d9_filter=.*\r$/d3d9_filter=0\r/' -e '}' \
     "$stage/cnc/ddraw.ini" >"$dst/ddraw.ini"
-printf '; Romance of the Three Kingdoms IV (Korean Win95)\r\n[SAN4W95]\r\nfake_mode=640x480x8\r\nnonexclusive=false\r\nadjmouse=true\r\ntoggle_borderless=true\r\nresizable=false\r\n' >>"$dst/ddraw.ini"
-for l in windowed=true maintas=true boxing=true 'shader=Nearest neighbor'; do
+printf '; Romance of the Three Kingdoms IV (Korean Win95)\r\n[SAN4W95]\r\nfake_mode=640x480x8\r\nnonexclusive=false\r\nadjmouse=true\r\ntoggle_borderless=true\r\nresizable=false\r\ndevmode=true\r\n' >>"$dst/ddraw.ini"
+for l in windowed=true maintas=true boxing=true 'shader=Nearest neighbor' d3d9_filter=0; do
     grep -q "^$l"$'\r$' "$dst/ddraw.ini" || { echo "ddraw.ini edit failed: $l" >&2; exit 1; }
 done
 

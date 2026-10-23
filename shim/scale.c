@@ -27,7 +27,8 @@
  * mode). It toggles devmode in ddraw.ini [SAN4W95] and takes effect on the
  * next start: cnc-ddraw reads devmode once at load into a global it does not
  * export, and its window procedure, which runs before ours, drops mouse
- * input while the cursor is not locked unless devmode is set.
+ * input while the cursor is not locked unless devmode is set. The patch's
+ * ddraw.ini ships devmode=true, so the lock starts off.
  */
 #include "shim.h"
 
